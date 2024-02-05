@@ -1,12 +1,24 @@
-version: '3'
+---
+- name: Nginx 배포하기
+  hosts: all
+  become: yes
 
-services:
-  nginx:
-    image: nginx:latest
-    ports:
-      - "8888:80"
-    deploy:
-      replicas: 3
-      placement:
-        constraints:
-          - node.role == worker
+  tasks:
+    - name: Docker Compose 설치
+      become: yes
+      apt:
+        name: docker-compose
+        state: present
+
+    - name: Docker Swarm 초기화
+      command: docker swarm init
+      args:
+        creates: /etc/docker/swarm_initialized
+
+    - name: 배포할 Nginx 서비스 정의
+      template:
+        src: nginx-compose.yml.j2
+        dest: /path/to/nginx-compose.yml
+
+    - name: Docker Stack으로 Nginx 서비스 배포
+      command: docker stack deploy -c /path/to/nginx-compose.yml mynginx
