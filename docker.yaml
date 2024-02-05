@@ -1,24 +1,13 @@
 ---
-- name: 웹서버 설치
-  hosts: localhost
+- name: 웹서버 설치 및 서비스 제공 with Docker Swarm
+  hosts: manager_node  # Docker Swarm Manager 노드에 접근하기 위한 노드
   become: yes
-  
+
   tasks:
-    - name: nginx
-      apt:
-        name: nginx
+    - name: Install Nginx on Worker Nodes
+      docker_service:
+        project_src: /path/to/your/docker-compose-directory
+        project_name: nginx_service
+        definition: /home/user1/awx-17.1.0/docker-compose.yml
         state: present
-    - name: index.html
-      get_url:
-        url: https://www.nginx.com
-        dest: /var/www/html
-    - name: service 
-      service:
-        name: nginx
-        state: started
-        enabled: true
-    - name: ufw
-      service:
-        name: ufw
-        state: stopped
-        enabled: false
+        recreate: yes
