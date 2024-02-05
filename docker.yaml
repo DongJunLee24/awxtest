@@ -6,8 +6,8 @@
   tasks:
     - name: Install Nginx on Worker Nodes
       docker_service:
-        project_src: /path/to/your/docker-compose-directory
+        project_src: /home/user1/awx-17.1.0/docker-compose.yml
         project_name: nginx_service
-        definition: /home/user1/awx-17.1.0/docker-compose.yml
+        definition: https://github.com/DongJunLee24/awxtest/edit/main/docker-compose.yaml
         state: present
         recreate: yes
